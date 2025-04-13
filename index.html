@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Is this a bird?</title>
+    <script src="https://unpkg.com/jspsych@7.3.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response"></script>
+    <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" rel="stylesheet" />
+    <style>
+      img { max-height: 300px; margin: 20px 0; }
+      .jspsych-btn { font-size: 20px; padding: 10px 20px; margin: 10px; }
+    </style>
+  </head>
+  <body></body>
+
+  <script>
+    const timeline = [];
+
+    const trials = [
+      {
+        stimulus: '<p>Is this a bird?</p><img src="eagle.jpg">',
+        data: { image: "eagle.jpg" }
+      },
+      {
+        stimulus: '<p>Is this a bird?</p><img src="kiwi.jpg">',
+        data: { image: "kiwi.jpg" }
+      }
+    ];
+
+    trials.forEach(trial => {
+      timeline.push({
+        type: jsPsychHtmlButtonResponse,
+        stimulus: trial.stimulus,
+        choices: ['Yes', 'No'],
+        data: trial.data,
+        on_finish: function(data) {
+          data.reaction_time = data.rt;
+          data.answer = data.response === 0 ? "Yes" : "No";
+        }
+      });
+    });
+
+    timeline.push({
+      type: jsPsychHtmlButtonResponse,
+      stimulus: function() {
+        const trials = jsPsych.data.get().values();
+        let summary = "<h3>Results:</h3><ul>";
+        trials.forEach(t => {
+          if (t.image) {
+            summary += `<li>${t.image} – Answer: ${t.answer}, Reaction time: ${t.reaction_time} ms</li>`;
+          }
+        });
+        summary += "</ul>";
+        return summary;
+      },
+      choices: ['Finish']
+    });
+
+    jsPsych.run(timeline);
+  </script>
+</html>
