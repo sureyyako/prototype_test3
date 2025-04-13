@@ -9,6 +9,8 @@
 <body></body>
 
 <script>
+  const jsPsych = initJsPsych();  // ✔️ Doğru başlatma
+
   const timeline = [];
 
   const welcome = {
@@ -26,7 +28,7 @@
   timeline.push(welcome);
   timeline.push(question);
 
-  jsPsych.run(timeline);
+  jsPsych.run(timeline);  // ✔️ Artık çalışır
 </script>
 
 </html>
